@@ -11,7 +11,7 @@ interface FilterState {
 const initialState: FilterState = {
   filterList: [],
   sorterState: 0,
-  cardsState: 1,
+  cardsState: 0,
 };
 
 const filterSlice = createSlice({
