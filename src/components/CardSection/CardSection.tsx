@@ -9,7 +9,6 @@ interface CardSectionProps {
 
 const CardSection: React.FC<CardSectionProps> = ({ currentProducts }) => {
   const cardsState: number = useAppSelector((state) => state.filter.cardsState);
- 
   return (
     <section
       className={`grid ${

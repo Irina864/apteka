@@ -35,9 +35,7 @@ const FormSelect: React.FC = () => {
         setIsOpen(false);
       }
     };
-
     document.addEventListener('mousedown', handleClickOutside);
-
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
@@ -65,8 +63,8 @@ const FormSelect: React.FC = () => {
           ))}
         </div>
       ) : null}
-      <div className="">
-        <img src="/Expand_down_light.svg" alt="arrow" />
+      <div className={`${isOpen && 'transform rotate-180'}`}>
+        <img src="/arrow.svg" alt="arrow" />
       </div>
     </div>
   );
