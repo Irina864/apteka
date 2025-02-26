@@ -1,22 +1,25 @@
 import { useAppSelector } from '@/store/hooks';
-import FilterItem from '../ui/FilterItem/FilterItem';
 import FormSelect from '../ui/FormSelect/FormSelect';
-import SorterItem from '../ui/SorterItem/SorterItem';
+import SorterSlider from '../ui/SorterSlider/SorterSlider';
+import SelectedFilterItem from '../ui/SelectedFilterItem/SelectedFilterItem';
 
 const Sorter: React.FC = () => {
   const filterList = useAppSelector((state) => state.filter.filterList);
   return (
     <div
-      className={` w-full flex  items-center ${
+      className={`w-full flex items-center my-2 ${
         filterList.length > 0 ? 'justify-between' : 'justify-end'
       }`}
     >
-      {filterList.map((item: string, index: number) => (
-        <FilterItem filter={item} key={index} />
-      ))}
+      <div className="flex gap-3 flex-wrap max-w-[70%] ">
+        {filterList.length > 0 &&
+          filterList.map((item) => (
+            <SelectedFilterItem key={item.id} {...item} />
+          ))}
+      </div>
       <div className="flex gap-2">
         <FormSelect />
-        <SorterItem />
+        <SorterSlider />
       </div>
     </div>
   );

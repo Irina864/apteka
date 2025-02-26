@@ -1,8 +1,7 @@
 import { updateCardsState } from '@/store/filterSlice';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { useEffect } from 'react';
 
-const SorterItem: React.FC = () => {
+const SorterSlider: React.FC = () => {
   const dispatch = useAppDispatch();
   const cardsState: number = useAppSelector((state) => state.filter.cardsState);
 
@@ -46,4 +45,4 @@ const SorterItem: React.FC = () => {
     </div>
   );
 };
-export default SorterItem;
+export default SorterSlider;

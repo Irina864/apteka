@@ -49,7 +49,7 @@ const Pagination: React.FC<PaginationProps> = ({
       {currentPage !== 1 && (
         <div
           onClick={setBackPage}
-          className="w-9 h-9 bg-gray-300 rounded-full active:text-blue-400 focus:text-blue-400 flex items-center justify-center hover:cursor-pointer"
+          className="w-9 h-9 bg-gray-300 rounded-full active:text-gray-400 focus:text-gray-400 flex items-center justify-center hover:cursor-pointer"
         >
           <img className="transition rotate-90" src="/arrow.svg" alt="back" />
         </div>
@@ -80,7 +80,7 @@ const Pagination: React.FC<PaginationProps> = ({
       {currentPage !== totalPages && (
         <div
           onClick={setNextPage}
-          className="w-9 h-9 bg-gray-300 rounded-full active:text-blue-400 focus:text-blue-400 flex items-center justify-center hover:cursor-pointer"
+          className="w-9 h-9 bg-gray-300 rounded-full active:text-gray-400 focus:text-gray-400 flex items-center justify-center hover:cursor-pointer"
         >
           <img className="transition -rotate-90" src="/arrow.svg" alt="next" />
         </div>

@@ -100,7 +100,7 @@ const CardItem: React.FC<CardItemProps> = ({ product }) => {
           </span>
         </div>
       </div>
-      <div className="h-full w-full bg-gray-300"></div>
+      <div className="h-full w-full bg-blue-300"></div>
       <div className="grid grid-rows-[1fr] ">
         {product.price && (
           <div className="text-black text-base text-right my-3 font-bold">

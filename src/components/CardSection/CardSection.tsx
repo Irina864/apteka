@@ -15,7 +15,7 @@ const CardSection: React.FC<CardSectionProps> = ({ currentProducts }) => {
         cardsState === 0
           ? 'grid-rows-3 grid-cols-4'
           : 'grid-rows-12 grid-cols-1'
-      } gap-4 w-3/4 h-auto `}
+      } gap-4 w-full h-auto `}
     >
       {currentProducts.length > 0 &&
         currentProducts.map((item: Medicine) => (

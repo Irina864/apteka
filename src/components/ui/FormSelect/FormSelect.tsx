@@ -44,7 +44,7 @@ const FormSelect: React.FC = () => {
   return (
     <div
       ref={selectWrapperRef}
-      className="flex items-center justify-center gap-1 bg-gray-300 rounded-md px-3 py-2 relative"
+      className="flex items-center justify-center gap-1 bg-indigo-200 rounded-md px-3 py-2 relative"
       onClick={() => {
         setIsOpen(!isOpen);
       }}
@@ -55,7 +55,7 @@ const FormSelect: React.FC = () => {
           {SORTER_VALUES.map((item: ISorter, index: number) => (
             <div
               key={index}
-              className="text-sm rounded-lg py-2 px-3 hover:bg-gray-200 hover:cursor-pointer"
+              className="text-sm rounded-lg py-2 px-3 hover:bg-indigo-200 hover:cursor-pointer"
               onClick={() => handleChange(item)}
             >
               {item.value}

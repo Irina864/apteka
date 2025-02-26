@@ -16,7 +16,6 @@ export const getProducts = createAsyncThunk<Medicine[], void>(
       }
 
       const responseJson: Medicine[] = await response.json();
-      console.log(response, responseJson);
       return responseJson;
     } catch (error) {
       console.error('Get data error:', error);
