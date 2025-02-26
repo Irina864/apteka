@@ -46,7 +46,7 @@ const FormSelect: React.FC = () => {
   return (
     <div
       ref={selectWrapperRef}
-      className="flex gap-1 bg-gray-300 rounded-md px-3 py-2 relative"
+      className="flex items-center justify-center gap-1 bg-gray-300 rounded-md px-3 py-2 relative"
       onClick={() => {
         setIsOpen(!isOpen);
       }}

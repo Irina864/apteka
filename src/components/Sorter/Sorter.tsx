@@ -7,7 +7,7 @@ const Sorter: React.FC = () => {
   const filterList = useAppSelector((state) => state.filter.filterList);
   return (
     <div
-      className={` w-full flex  items-center bg-slate-500 ${
+      className={` w-full flex  items-center ${
         filterList.length > 0 ? 'justify-between' : 'justify-end'
       }`}
     >
