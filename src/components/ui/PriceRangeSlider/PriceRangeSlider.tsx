@@ -1,106 +1,177 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
-interface IPriceRangeProps {
-  min: number;
-  max: number;
-  onChange?: (values: { min: number; max: number }) => void;
+interface IPriceRangeSliderProps {
+  minPrice: number;
+  maxPrice: number;
+  minValue: number;
+  maxValue: number;
+  onMinChange: (value: number) => void;
+  onMaxChange: (value: number) => void;
 }
 
-const PriceRangeSlider: React.FC<IPriceRangeProps> = ({
-  min,
-  max,
-  onChange,
+const PriceRangeSlider: React.FC<IPriceRangeSliderProps> = ({
+  minPrice,
+  maxPrice,
+  minValue,
+  maxValue,
+  onMinChange,
+  onMaxChange,
 }) => {
-  const [range, setRange] = useState({ min, max });
   const [isDragging, setIsDragging] = useState<'min' | 'max' | null>(null);
 
-  const getPercentage = (value: number) => {
-    return ((value - min) / (max - min)) * 100;
+  const getMinPercentage = () => {
+    return ((minValue - minPrice) / (maxPrice - minPrice)) * 100;
   };
 
-  const getValue = (percentage: number) => {
-    return Math.round(((max - min) * percentage) / 100 + min);
+  const getMaxPercentage = () => {
+    return ((maxValue - minPrice) / (maxPrice - minPrice)) * 100;
   };
 
-  const handleMove = useCallback(
-    (event: MouseEvent) => {
-      if (!isDragging) return;
+  const handleThumbMouseDown = (thumbType: 'min' | 'max') => {
+    setIsDragging(thumbType);
+  };
 
-      const slider = document.getElementById('price-range-track');
-      if (!slider) return;
-
-      const rect = slider.getBoundingClientRect();
-      let percentage = ((event.clientX - rect.left) / rect.width) * 100;
-
-      percentage = Math.min(100, Math.max(0, percentage));
-
-      const value = getValue(percentage);
-
-      setRange((prev) => {
-        if (isDragging === 'min') {
-          const newMin = Math.min(value, prev.max - 1);
-          return { ...prev, min: newMin };
-        } else {
-          const newMax = Math.max(value, prev.min + 1);
-          return { ...prev, max: newMax };
-        }
-      });
-    },
-    [isDragging, min, max]
-  );
-
-  const handleMouseUp = useCallback(() => {
+  const handleMouseUp = () => {
     setIsDragging(null);
-  }, []);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging) return;
+
+    const sliderTrack = e.currentTarget;
+    const rect = sliderTrack.getBoundingClientRect();
+    const percentage = Math.max(
+      0,
+      Math.min(100, ((e.clientX - rect.left) / rect.width) * 100)
+    );
+
+    const newValue = Math.round(
+      (percentage * (maxPrice - minPrice)) / 100 + minPrice
+    );
+
+    if (isDragging === 'min') {
+      const validatedValue = Math.max(
+        minPrice,
+        Math.min(newValue, maxValue - 1)
+      );
+      onMinChange(validatedValue);
+    } else {
+      const validatedValue = Math.min(
+        maxPrice,
+        Math.max(newValue, minValue + 1)
+      );
+      onMaxChange(validatedValue);
+    }
+  };
 
   useEffect(() => {
     if (isDragging) {
-      document.addEventListener('mousemove', handleMove);
-      document.addEventListener('mouseup', handleMouseUp);
+      const handleGlobalMouseMove = (e: MouseEvent) => {
+        const sliderTrack = document.getElementById('slider-track');
+        if (!sliderTrack) return;
+
+        const rect = sliderTrack.getBoundingClientRect();
+        const percentage = Math.max(
+          0,
+          Math.min(100, ((e.clientX - rect.left) / rect.width) * 100)
+        );
+
+        const newValue = Math.round(
+          (percentage * (maxPrice - minPrice)) / 100 + minPrice
+        );
+
+        if (isDragging === 'min') {
+          const validatedValue = Math.max(
+            minPrice,
+            Math.min(newValue, maxValue - 1)
+          );
+          onMinChange(validatedValue);
+        } else {
+          const validatedValue = Math.min(
+            maxPrice,
+            Math.max(newValue, minValue + 1)
+          );
+          onMaxChange(validatedValue);
+        }
+      };
+
+      const handleGlobalMouseUp = () => {
+        setIsDragging(null);
+      };
+
+      document.addEventListener('mousemove', handleGlobalMouseMove);
+      document.addEventListener('mouseup', handleGlobalMouseUp);
 
       return () => {
-        document.removeEventListener('mousemove', handleMove);
-        document.removeEventListener('mouseup', handleMouseUp);
+        document.removeEventListener('mousemove', handleGlobalMouseMove);
+        document.removeEventListener('mouseup', handleGlobalMouseUp);
       };
     }
-  }, [isDragging, handleMove, handleMouseUp]);
-
-  useEffect(() => {
-    onChange?.(range);
-  }, [range, onChange]);
+  }, [
+    isDragging,
+    minValue,
+    maxValue,
+    minPrice,
+    maxPrice,
+    onMinChange,
+    onMaxChange,
+  ]);
 
   return (
-    <div className="w-full max-w-2xl px-4 py-8">
-      <div id="price-range-track" className="relative h-2 w-full">
-        <div className="absolute h-full w-full bg-blue-200 rounded-full" />
+    <div className="relative h-10 ">
+      <div
+        id="slider-track"
+        className="absolute top-1/2 left-4 w-11/12 h-1 bg-gray-300 rounded transform -translate-y-1/2 "
+        onMouseDown={(e) => {
+          const rect = e.currentTarget.getBoundingClientRect();
+          const clickPos = ((e.clientX - rect.left) / rect.width) * 100;
+          const minPos = getMinPercentage();
+          const maxPos = getMaxPercentage();
+
+          if (Math.abs(clickPos - minPos) <= Math.abs(clickPos - maxPos)) {
+            setIsDragging('min');
+          } else {
+            setIsDragging('max');
+          }
+
+          handleMouseMove(e);
+        }}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+      >
+        <div
+          className="absolute h-full bg-blue-500 rounded"
+          style={{
+            left: `${getMinPercentage()}%`,
+            width: `${getMaxPercentage() - getMinPercentage()}%`,
+          }}
+        ></div>
 
         <div
-          className="absolute h-full bg-blue-500 rounded-full"
+          className="absolute z-10 w-4 h-4 bg-blue-500 border-2 border-white rounded-full cursor-pointer transform -translate-x-1/2 -translate-y-1/2"
           style={{
-            left: `${getPercentage(range.min)}%`,
-            right: `${100 - getPercentage(range.max)}%`,
+            left: `${getMinPercentage()}%`,
+            top: '50%',
+            zIndex: isDragging === 'min' ? 2 : 1,
           }}
-        />
+          onMouseDown={(e) => {
+            e.stopPropagation();
+            handleThumbMouseDown('min');
+          }}
+        ></div>
 
-        <button
-          className="absolute w-6 h-6 bg-blue-500 border-2 border-blue-500 rounded-full focus:outline-none ring-4 focus:ring-blue-400 focus:ring-opacity-50 -translate-x-1/2 top-1/2 -translate-y-1/2 cursor-pointer active:cursor-pointer"
-          style={{ left: `${getPercentage(range.min)}%` }}
-          onMouseDown={() => setIsDragging('min')}
-          role="slider"
-          aria-valuemin={min}
-          aria-valuemax={range.max}
-          aria-valuenow={range.min}
-        />
-
-        <button
-          className="absolute w-6 h-6 bg-blue-500 border-2 border-blue-500 rounded-full focus:outline-none ring-4 focus:ring-blue-400 focus:ring-opacity-50 -translate-x-1/2 top-1/2 -translate-y-1/2 cursor-pointer active:cursor-pointer"
-          style={{ left: `${getPercentage(range.max)}%` }}
-          onMouseDown={() => setIsDragging('max')}
-          role="slider"
-          aria-valuemin={range.min}
-          aria-valuemax={max}
-          aria-valuenow={range.max}
-        />
+        <div
+          className="absolute z-10 w-4 h-4 bg-blue-500 border-2 border-white rounded-full cursor-pointer transform -translate-x-1/2 -translate-y-1/2"
+          style={{
+            left: `${getMaxPercentage()}%`,
+            top: '50%',
+            zIndex: isDragging === 'max' ? 2 : 1,
+          }}
+          onMouseDown={(e) => {
+            e.stopPropagation();
+            handleThumbMouseDown('max');
+          }}
+        ></div>
       </div>
     </div>
   );
