@@ -1,5 +1,6 @@
 'use client';
 import CardSection from '@/components/CardSection/CardSection';
+import EmptyBox from '@/components/EmptyBox/EmptyBox';
 import Filter from '@/components/Filter/Filter';
 import Pagination from '@/components/Pagination/Pagination';
 import Sorter from '@/components/Sorter/Sorter';
@@ -152,16 +153,20 @@ export default function Home() {
       <div className="flex items-start justify-start gap-5  w-full ">
         <Filter />
         <div className="flex flex-col items-center justify-center gap-11 w-3/4">
-          <CardSection currentProducts={currentItems} />
-          {currentItems.length > 0 && (
-            <Pagination
-              currentPage={currentPage}
-              itemsPerPage={itemsPerPage}
-              totalItems={totalItems}
-              setPage={handlePage}
-              setNextPage={handleNextPage}
-              setBackPage={handleBackPage}
-            />
+          {currentItems.length > 0 ? (
+            <>
+              <CardSection currentProducts={currentItems} />
+              <Pagination
+                currentPage={currentPage}
+                itemsPerPage={itemsPerPage}
+                totalItems={totalItems}
+                setPage={handlePage}
+                setNextPage={handleNextPage}
+                setBackPage={handleBackPage}
+              />
+            </>
+          ) : (
+            <EmptyBox />
           )}
         </div>
       </div>

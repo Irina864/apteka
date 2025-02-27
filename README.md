@@ -1,36 +1,24 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+При помощи Next js, typescript реализовала страницу каталога:
+https://apteka.by/drugs/antibakterialnyye-sredstva-45c48cce/antibiotiki-d3d94468.
 
-## Getting Started
+Для стилизации использовала библиотеку tailwind.css.
 
-First, run the development server:
+На одной странице до 12 товаров в 3 строки (по 4 товара в строку).
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Сортировка по релевантности идет по умолчанию (товары отображаются без сортировки).
+Сортировка по цене реализована.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Выбранные фильтры удаляются по нажатию на кнопку с крестом: при нажатии на кнопки должны удаляться фильтры.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Реализована пагинация.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Футер и хедер, адаптивную версию для мобильных устройств, логику добавления товаров в избранное и в корзину нереализовывала.
 
-## Learn More
+Вёрстку не нужно делать идентичной. Достаточно, чтобы сайт выглядел примерно так же, как на представленных скриншотах - выполнено.
 
-To learn more about Next.js, take a look at the following resources:
+Товары получены с бэкенда, фильтры выводятся на основе характеристик товаров. Также нужно предусмотреть ситуацию когда например у товаров нет той или иной характеристики.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+По маршруту http://localhost:9080/api/products можно получить весь список товаров.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Выполненное тестовое задание нужно залить на свой github без бэкенда, только фронтенд - выполнено.
+Репозиторий с тестовым заданием должен быть публичным чтобы его можно было посмотреть. Деплоить на хостинг не нужно - выполнено.
