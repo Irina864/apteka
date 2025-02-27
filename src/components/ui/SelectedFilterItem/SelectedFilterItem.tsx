@@ -1,7 +1,7 @@
-import { FilterObject, removeFilter } from '@/store/filterSlice';
+import { IFilterObject, removeFilter } from '@/store/filterSlice';
 import { useAppDispatch } from '@/store/hooks';
 
-const SelectedFilterItem: React.FC<FilterObject> = ({ id, value }) => {
+const SelectedFilterItem: React.FC<IFilterObject> = ({ id, value }) => {
   const dispatch = useAppDispatch();
   return (
     <div

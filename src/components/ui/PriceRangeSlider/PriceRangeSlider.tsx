@@ -1,18 +1,17 @@
 import React, { useState, useCallback, useEffect } from 'react';
 
-interface PriceRangeProps {
+interface IPriceRangeProps {
   min: number;
   max: number;
   onChange?: (values: { min: number; max: number }) => void;
 }
 
-const PriceRangeSlider: React.FC<PriceRangeProps> = ({
+const PriceRangeSlider: React.FC<IPriceRangeProps> = ({
   min,
   max,
   onChange,
 }) => {
   const [range, setRange] = useState({ min, max });
-  console.log(range);
   const [isDragging, setIsDragging] = useState<'min' | 'max' | null>(null);
 
   const getPercentage = (value: number) => {

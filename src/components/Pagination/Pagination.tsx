@@ -1,4 +1,4 @@
-interface PaginationProps {
+interface IPaginationProps {
   currentPage: number;
   itemsPerPage: number;
   totalItems: number;
@@ -7,7 +7,7 @@ interface PaginationProps {
   setBackPage: () => void;
 }
 
-const Pagination: React.FC<PaginationProps> = ({
+const Pagination: React.FC<IPaginationProps> = ({
   currentPage,
   itemsPerPage,
   totalItems,

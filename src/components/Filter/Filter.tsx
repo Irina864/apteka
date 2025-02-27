@@ -1,13 +1,13 @@
-import { addFilterItems, cleanFilter, FilterItem } from '@/store/filterSlice';
+import { addFilterItems, cleanFilter, IFilterItem } from '@/store/filterSlice';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { Medicine } from '@/store/productsSlice';
+import { IMedicine } from '@/store/productsSlice';
 import Link from 'next/link';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FILTER_TITLES } from '@/constants';
-import FilterItemBox from '@/components/ui/FilterItemBox/FilterItemBox';
+import FilterItemField from '@/components/ui/FilterItemField/FilterItemField';
 import FilterItemPrice from '../ui/FilterItemPrice/FilterItemPrice';
 
-interface Characteristic {
+interface ICharacteristic {
   country?: string;
   brand?: string;
   dossage?: string;
@@ -25,19 +25,19 @@ const Filter: React.FC = () => {
     (state) => state.medicines.medicinesList
   );
   const isLoading = useAppSelector((state) => state.medicines.isLoading);
-  const filterItems: FilterItem[] = useAppSelector(
+  const filterItems: IFilterItem[] = useAppSelector(
     (state) => state.filter.filterItems
   );
 
   useEffect(() => {
-    let newFilterItems: FilterItem[] = [];
+    let newFilterItems: IFilterItem[] = [];
     newFilterItems.push({
       id: 'price',
       title: 'Цена',
       items: [],
     });
     const uniqueKeys = new Set<string>();
-    medicinesList.forEach((product: Medicine) => {
+    medicinesList.forEach((product: IMedicine) => {
       const keys = Object.keys(product.characteristics);
       keys.forEach((key) => {
         uniqueKeys.add(key);
@@ -50,15 +50,15 @@ const Filter: React.FC = () => {
         items: [],
       });
     });
-    medicinesList.forEach((product: Medicine) => {
-      const characteristics: Characteristic = product.characteristics;
+    medicinesList.forEach((product: IMedicine) => {
+      const characteristics: ICharacteristic = product.characteristics;
       const price: number = product.price;
       if (price && !newFilterItems[0].items.includes(price)) {
         newFilterItems[0].items.push(price);
       }
-      newFilterItems.forEach((filterItem: FilterItem) => {
+      newFilterItems.forEach((filterItem: IFilterItem) => {
         const value: string | number | boolean | undefined =
-          characteristics[filterItem.id as keyof Characteristic];
+          characteristics[filterItem.id as keyof ICharacteristic];
         if (value && !filterItem.items.includes(value)) {
           filterItem.items.push(value);
         }
@@ -84,7 +84,7 @@ const Filter: React.FC = () => {
     <div className="flex flex-col gap-3 bg-white w-1/4 h-fit rounded-xl p-4">
       <Link
         href="/"
-        className="bg-indigo-100 w-full h-fit rounded-lg flex items-center gap-1 p-2"
+        className="bg-indigo-100 w-full h-fit rounded-lg flex items-center gap-1 px-2 py-3"
       >
         <img
           src="/arrow.svg"
@@ -95,12 +95,14 @@ const Filter: React.FC = () => {
           Антибактериальные средства
         </span>
       </Link>
-      {filterItems.map((filterItem: FilterItem) =>
-        filterItem.id === 'price' ? (
-          <FilterItemPrice key={filterItem.id} filter={filterItem} />
-        ) : (
-          <FilterItemBox key={filterItem.id} filter={filterItem} />
-        )
+      {filterItems.map(
+        (filterItem: IFilterItem) =>
+          filterItem.items.length > 0 &&
+          (filterItem.id === 'price' ? (
+            <FilterItemPrice key={filterItem.id} filter={filterItem} />
+          ) : (
+            <FilterItemField key={filterItem.id} filter={filterItem} />
+          ))
       )}
       <button
         type="button"

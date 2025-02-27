@@ -1,13 +1,13 @@
 'use client';
 import { useAppSelector } from '@/store/hooks';
-import { Medicine } from '@/store/productsSlice';
+import { IMedicine } from '@/store/productsSlice';
 import CardItem from '../ui/CardItem/CardItem';
 
-interface CardSectionProps {
-  currentProducts: Medicine[];
+interface ICardSectionProps {
+  currentProducts: IMedicine[];
 }
 
-const CardSection: React.FC<CardSectionProps> = ({ currentProducts }) => {
+const CardSection: React.FC<ICardSectionProps> = ({ currentProducts }) => {
   const cardsState: number = useAppSelector((state) => state.filter.cardsState);
   return (
     <section
@@ -18,7 +18,7 @@ const CardSection: React.FC<CardSectionProps> = ({ currentProducts }) => {
       } gap-4 w-full h-auto `}
     >
       {currentProducts.length > 0 &&
-        currentProducts.map((item: Medicine) => (
+        currentProducts.map((item: IMedicine) => (
           <CardItem key={item.id} product={item} />
         ))}
     </section>

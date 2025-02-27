@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '@/store/store';
 
-export const getProducts = createAsyncThunk<Medicine[], void>(
+export const getProducts = createAsyncThunk<IMedicine[], void>(
   'medicines/getProducts',
   async (_, thunkAPI) => {
     try {
@@ -15,7 +15,7 @@ export const getProducts = createAsyncThunk<Medicine[], void>(
         return thunkAPI.rejectWithValue(errorObject);
       }
 
-      const responseJson: Medicine[] = await response.json();
+      const responseJson: IMedicine[] = await response.json();
       return responseJson;
     } catch (error) {
       console.error('Get data error:', error);
@@ -24,7 +24,7 @@ export const getProducts = createAsyncThunk<Medicine[], void>(
   }
 );
 
-export interface Medicine {
+export interface IMedicine {
   id: number;
   title: string;
   price: number;
@@ -42,12 +42,12 @@ export interface Medicine {
   };
 }
 
-interface MedicinesState {
-  medicinesList: Medicine[];
+interface IMedicinesState {
+  medicinesList: IMedicine[];
   isLoading: boolean;
 }
 
-const initialState: MedicinesState = {
+const initialState: IMedicinesState = {
   medicinesList: [],
   isLoading: false,
 };
@@ -62,7 +62,7 @@ const medicinesSlice = createSlice({
     });
     builder.addCase(
       getProducts.fulfilled,
-      (state, action: PayloadAction<Medicine[]>) => {
+      (state, action: PayloadAction<IMedicine[]>) => {
         state.medicinesList = action.payload;
         state.isLoading = false;
       }

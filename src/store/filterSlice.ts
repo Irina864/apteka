@@ -2,25 +2,25 @@ import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '@/store/store';
 
-export interface FilterObject {
+export interface IFilterObject {
   id: string;
   field: string;
   value: string | number | boolean;
 }
 
-export interface FilterItem {
+export interface IFilterItem {
   id: string;
   title: string;
   items: (number | string | boolean)[];
 }
-interface FilterState {
-  filterList: FilterObject[];
-  filterItems: FilterItem[];
+interface IFilterState {
+  filterList: IFilterObject[];
+  filterItems: IFilterItem[];
   sorterState: number;
   cardsState: number;
 }
 
-const initialState: FilterState = {
+const initialState: IFilterState = {
   filterList: [],
   filterItems: [],
   sorterState: 0,
@@ -31,14 +31,15 @@ const filterSlice = createSlice({
   name: 'filter',
   initialState,
   reducers: {
-    addFilter: (state, action: PayloadAction<{ filter: FilterObject }>) => {
+    addFilter: (state, action: PayloadAction<{ filter: IFilterObject }>) => {
       const { filter } = action.payload;
-      if (!state.filterList.includes(filter)) {
-        state.filterList.push(filter);
+      const existingFilterIndex = state.filterList.findIndex(
+        (item) => item.id === filter.id
+      );
+      if (existingFilterIndex !== -1) {
+        state.filterList[existingFilterIndex] = filter;
       } else {
-        state.filterList = state.filterList.filter(
-          (item) => item.id !== filter.id
-        );
+        state.filterList.push(filter);
       }
     },
     removeFilter: (state, action: PayloadAction<{ filter: string }>) => {
@@ -50,7 +51,7 @@ const filterSlice = createSlice({
     },
     addFilterItems: (
       state,
-      action: PayloadAction<{ filterItem: FilterItem[] }>
+      action: PayloadAction<{ filterItem: IFilterItem[] }>
     ) => {
       const { filterItem } = action.payload;
       state.filterItems = filterItem;

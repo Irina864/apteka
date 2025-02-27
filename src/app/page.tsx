@@ -5,7 +5,7 @@ import Pagination from '@/components/Pagination/Pagination';
 import Sorter from '@/components/Sorter/Sorter';
 import { sortByField } from '@/helpers/sortByField';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { getProducts, Medicine } from '@/store/productsSlice';
+import { getProducts, IMedicine } from '@/store/productsSlice';
 import { useEffect, useState } from 'react';
 
 export default function Home() {
@@ -22,7 +22,7 @@ export default function Home() {
   );
   const isLoading = useAppSelector((state) => state.medicines.isLoading);
   const [currentProducts, setCurrentProducts] =
-    useState<Medicine[]>(medicinesList);
+    useState<IMedicine[]>(medicinesList);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const itemsPerPage: number = 12;
   const totalItems: number = currentProducts.length;
@@ -47,23 +47,33 @@ export default function Home() {
       return acc;
     }, {} as Record<string, (string | number | boolean)[]>);
 
-    const newProducts: Medicine[] = medicinesList.filter((product) => {
+    const newProducts: IMedicine[] = medicinesList.filter((product) => {
       return Object.keys(groupedFilters).every((field) => {
         const values = groupedFilters[field];
         const matchesField = values.some((value) => {
           if (field === 'isByPrescription') {
             return value === 'По рецепту'
               ? product.characteristics[
-                  field as keyof Medicine['characteristics']
+                  field as keyof IMedicine['characteristics']
                 ] === true
               : product.characteristics[
-                  field as keyof Medicine['characteristics']
+                  field as keyof IMedicine['characteristics']
                 ] === false;
+          } else if (field === 'price_min') {
+            if (typeof value === 'string') {
+              const minPrice = parseFloat(value.replace(/[^0-9.]/g, ''));
+              return product.price > minPrice;
+            }
+          } else if (field === 'price_max') {
+            if (typeof value === 'string') {
+              const maxPrice = parseFloat(value.replace(/[^0-9.]/g, ''));
+              return product.price < maxPrice;
+            }
           } else {
             return (
               product.characteristics[
-                field as keyof Medicine['characteristics']
-              ] === value || product[field as keyof Medicine] === value
+                field as keyof IMedicine['characteristics']
+              ] === value || product[field as keyof IMedicine] === value
             );
           }
         });
@@ -98,7 +108,7 @@ export default function Home() {
     }
   }, [sorterState]);
 
-  const currentItems: Medicine[] = currentProducts.slice(
+  const currentItems: IMedicine[] = currentProducts.slice(
     indexOfFirstItem,
     indexOfLastItem
   );

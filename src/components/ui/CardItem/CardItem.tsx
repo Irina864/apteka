@@ -1,11 +1,11 @@
 import { useAppSelector } from '@/store/hooks';
-import { Medicine } from '@/store/productsSlice';
+import { IMedicine } from '@/store/productsSlice';
 
-interface CardItemProps {
-  product: Medicine;
+interface ICardItemProps {
+  product: IMedicine;
 }
 
-const CardItem: React.FC<CardItemProps> = ({ product }) => {
+const CardItem: React.FC<ICardItemProps> = ({ product }) => {
   const cardsState: number = useAppSelector((state) => state.filter.cardsState);
 
   return cardsState === 0 ? (
