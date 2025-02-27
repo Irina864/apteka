@@ -10,7 +10,7 @@ const CardItem: React.FC<ICardItemProps> = ({ product }) => {
 
   return cardsState === 0 ? (
     <div className="flex flex-col   rounded-xl h-450px w-full p-3 bg-white hover:shadow-xl">
-      <div className="w-full h-auto relative">
+      <div className="w-full h-auto min-h-8 relative">
         <img
           src={product.image}
           className="w-full h-auto"

@@ -4,11 +4,9 @@ import { useEffect, useState } from 'react';
 import PriceRangeSlider from '@/components/ui/PriceRangeSlider/PriceRangeSlider';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 
-interface IPrice {
+interface IPriceRange {
   price_min: number;
   price_max: number;
-  price_min_input: number | string;
-  price_max_input: number | string;
 }
 interface IFilterItemPriceProps {
   filter: IFilterItem;
@@ -16,93 +14,104 @@ interface IFilterItemPriceProps {
 
 const FilterItemPrice: React.FC<IFilterItemPriceProps> = ({ filter }) => {
   const dispatch = useAppDispatch();
-  const filterList = useAppSelector((state) => state.filter.filterList);
-  const priceMinObject = filterList.find((item) => item.id === 'price_min');
-  const priceMaxObject = filterList.find((item) => item.id === 'price_max');
   const [isOpenFilterItem, setIsOpenFilterItem] = useState<boolean>(true);
-  const [price, setPrice] = useState<IPrice>({
+  const filterList = useAppSelector((state) => state.filter.filterList);
+  const [priceRange, setPriceRange] = useState<IPriceRange>({
     price_min: Number(filter.items[0]),
     price_max: Number(filter.items[filter.items.length - 1]),
-    price_min_input: priceMinObject ? String(priceMinObject.value) : '',
-    price_max_input: priceMaxObject ? String(priceMaxObject.value) : '',
   });
 
+  const [minPriceInput, setMinPriceInput] = useState<number>(
+    priceRange.price_min
+  );
+  const [maxPriceInput, setMaxPriceInput] = useState<number>(
+    priceRange.price_max
+  );
+
   useEffect(() => {
-    if (filter.items.length > 0) {
-      const prices = filter.items.map(Number).filter((num) => !isNaN(num));
-      if (prices.length > 0) {
-        const newMin = Math.min(...prices);
-        const newMax = Math.max(...prices);
-        if (price.price_min !== newMin || price.price_max !== newMax) {
-          setPrice({
-            price_min: newMin,
-            price_max: newMax,
-            price_min_input: String(newMin),
-            price_max_input: String(newMax),
-          });
-        }
-      }
+    setMinPriceInput(priceRange.price_min);
+    setMaxPriceInput(priceRange.price_max);
+  }, [priceRange]);
+
+  useEffect(() => {
+    if (!filterList.find((item) => item.id === 'price_min')) {
+      setMinPriceInput(priceRange.price_min);
     }
-  }, [filter]);
+    if (!filterList.find((item) => item.id === 'price_max')) {
+      setMaxPriceInput(priceRange.price_max);
+    }
+  }, [filterList]);
 
-  useEffect(() => {
-    const minPriceInput = Number(price.price_min_input);
-    const maxPriceInput = Number(price.price_max_input);
+  const handleMinPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseInt(e.target.value);
+    if (isNaN(value)) {
+      setMinPriceInput(priceRange.price_min);
+      return;
+    }
 
-    if (!isNaN(minPriceInput) && minPriceInput > price.price_min) {
+    const validatedValue = Math.max(
+      priceRange.price_min,
+      Math.min(value, maxPriceInput - 1)
+    );
+    setMinPriceInput(validatedValue);
+    updateMinPriceFilter(validatedValue);
+  };
+
+  const handleMaxPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseInt(e.target.value);
+    if (isNaN(value)) {
+      setMaxPriceInput(priceRange.price_max);
+      return;
+    }
+
+    const validatedValue = Math.min(
+      priceRange.price_max,
+      Math.max(value, minPriceInput + 1)
+    );
+    setMaxPriceInput(validatedValue);
+    updateMaxPriceFilter(validatedValue);
+  };
+
+  const updateMinPriceFilter = (value: number) => {
+    if (value > priceRange.price_min) {
       dispatch(
         addFilter({
           filter: {
             id: 'price_min',
             field: 'price_min',
-            value: `от ${price.price_min_input} р.`,
+            value: `от ${value} р.`,
           },
         })
       );
     } else {
       dispatch(removeFilter({ filter: 'price_min' }));
     }
+  };
 
-    if (!isNaN(maxPriceInput) && maxPriceInput < price.price_max) {
+  const updateMaxPriceFilter = (value: number) => {
+    if (value < priceRange.price_max) {
       dispatch(
         addFilter({
           filter: {
             id: 'price_max',
             field: 'price_max',
-            value: `до ${price.price_max_input} р.`,
+            value: `до ${value} р.`,
           },
         })
       );
     } else {
       dispatch(removeFilter({ filter: 'price_max' }));
     }
-  }, [price, dispatch]);
-
-  const handleChange = (values: { min: number; max: number }) => {
-    setPrice((prev) => {
-      const newPriceMinInput = String(values.min);
-      const newPriceMaxInput = String(values.max);
-
-      if (
-        prev.price_min_input !== newPriceMinInput ||
-        prev.price_max_input !== newPriceMaxInput
-      ) {
-        return {
-          ...prev,
-          price_min_input: newPriceMinInput,
-          price_max_input: newPriceMaxInput,
-        };
-      }
-      return prev;
-    });
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setPrice((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+  const handleSliderMinChange = (newMinValue: number) => {
+    setMinPriceInput(newMinValue);
+    updateMinPriceFilter(newMinValue);
+  };
+
+  const handleSliderMaxChange = (newMaxValue: number) => {
+    setMaxPriceInput(newMaxValue);
+    updateMaxPriceFilter(newMaxValue);
   };
 
   return (
@@ -134,27 +143,32 @@ const FilterItemPrice: React.FC<IFilterItemPriceProps> = ({ filter }) => {
               className="w-full rounded-lg bg-indigo-100 outline-none py-2 px-5"
               type="number"
               name="price_min_input"
-              value={price.price_min_input}
-              onChange={handleInputChange}
+              value={minPriceInput}
+              onChange={handleMinPriceChange}
+              min={priceRange.price_min}
+              max={priceRange.price_max}
               id={`filter-item-price_min_input`}
-              placeholder={`от ${price.price_min}`}
-              readOnly
+              placeholder={`от ${priceRange.price_min}`}
             />
             <input
               className="w-full rounded-lg bg-indigo-100 outline-none py-2 px-5"
               type="number"
               name="price_max_input"
-              value={price.price_max_input}
-              onChange={handleInputChange}
+              value={maxPriceInput}
+              onChange={handleMaxPriceChange}
+              min={priceRange.price_min}
+              max={priceRange.price_max}
               id={`filter-item-price_max_input`}
-              placeholder={`до ${price.price_max}`}
-              readOnly
+              placeholder={`до ${priceRange.price_max}`}
             />
           </div>
           <PriceRangeSlider
-            min={price.price_min}
-            max={price.price_max}
-            onChange={handleChange}
+            minPrice={priceRange.price_min}
+            maxPrice={priceRange.price_max}
+            minValue={minPriceInput}
+            maxValue={maxPriceInput}
+            onMinChange={handleSliderMinChange}
+            onMaxChange={handleSliderMaxChange}
           />
         </div>
       )}
