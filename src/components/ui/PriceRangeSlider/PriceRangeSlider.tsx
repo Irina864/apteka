@@ -83,7 +83,7 @@ const PriceRangeSlider: React.FC<IPriceRangeProps> = ({
         />
 
         <button
-          className="absolute w-6 h-6 bg-white border-2 border-blue-500 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 -translate-x-1/2 top-1/2 -translate-y-1/2 cursor-grab active:cursor-grabbing"
+          className="absolute w-6 h-6 bg-blue-500 border-2 border-blue-500 rounded-full focus:outline-none ring-4 focus:ring-blue-400 focus:ring-opacity-50 -translate-x-1/2 top-1/2 -translate-y-1/2 cursor-pointer active:cursor-pointer"
           style={{ left: `${getPercentage(range.min)}%` }}
           onMouseDown={() => setIsDragging('min')}
           role="slider"
@@ -93,7 +93,7 @@ const PriceRangeSlider: React.FC<IPriceRangeProps> = ({
         />
 
         <button
-          className="absolute w-6 h-6 bg-white border-2 border-blue-500 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 -translate-x-1/2 top-1/2 -translate-y-1/2 cursor-grab active:cursor-grabbing"
+          className="absolute w-6 h-6 bg-blue-500 border-2 border-blue-500 rounded-full focus:outline-none ring-4 focus:ring-blue-400 focus:ring-opacity-50 -translate-x-1/2 top-1/2 -translate-y-1/2 cursor-pointer active:cursor-pointer"
           style={{ left: `${getPercentage(range.max)}%` }}
           onMouseDown={() => setIsDragging('max')}
           role="slider"
