@@ -84,7 +84,7 @@ const Filter: React.FC = () => {
     <div className="flex flex-col gap-3 bg-white w-1/4 h-fit rounded-xl p-4">
       <Link
         href="/"
-        className="bg-indigo-100 w-full h-fit rounded-lg flex items-center gap-1 px-2 py-3"
+        className="bg-indigo-100 w-full h-fit rounded-lg flex items-center gap-1 px-2 py-3 hover:bg-indigo-300"
       >
         <img
           src="/arrow.svg"
@@ -109,7 +109,7 @@ const Filter: React.FC = () => {
         onClick={() => {
           dispatch(cleanFilter());
         }}
-        className="w-full h-fit rounded-md flex items-center justify-center gap-1 p-2 px-auto bg-indigo-100"
+        className="w-full h-fit rounded-md flex items-center justify-center gap-1 p-2 px-auto bg-indigo-100 hover:bg-indigo-300"
       >
         Очистить фильтр
       </button>

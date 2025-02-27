@@ -107,16 +107,17 @@ const FilterItemPrice: React.FC<IFilterItemPriceProps> = ({ filter }) => {
 
   return (
     <div className="h-fit">
-      <div className="flex justify-between items-center">
+      <button
+        type="button"
+        className="w-full flex justify-between items-center cursor-pointer"
+        onClick={() => {
+          setIsOpenFilterItem(!isOpenFilterItem);
+        }}
+      >
         <label className="text-[14px] font-semibold leading-[130%]">
           {filter.title}
         </label>
-        <button
-          type="button"
-          onClick={() => {
-            setIsOpenFilterItem(!isOpenFilterItem);
-          }}
-        >
+        <div className="flex justify-between items-center">
           <img
             src="/arrow.svg"
             alt="toggle"
@@ -124,8 +125,8 @@ const FilterItemPrice: React.FC<IFilterItemPriceProps> = ({ filter }) => {
               isOpenFilterItem ? 'rotate-0' : 'rotate-180'
             }`}
           />
-        </button>
-      </div>
+        </div>
+      </button>
       {isOpenFilterItem && (
         <div className="my-4 overflow-y-auto max-h-44 flex flex-col gap-3">
           <div className="flex items-center justify-between gap-3 ">

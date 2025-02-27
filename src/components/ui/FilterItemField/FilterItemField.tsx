@@ -106,16 +106,17 @@ const FilterItemField: React.FC<IFilterItemFieldProps> = ({ filter }) => {
     filter.id !== 'isByPrescription' &&
     filter.id !== 'price' && (
       <div className="h-fit">
-        <div className="flex justify-between items-center">
+        <button
+          type="button"
+          className="w-full flex justify-between items-center cursor-pointer"
+          onClick={() => {
+            setIsOpenFilterItem(!isOpenFilterItem);
+          }}
+        >
           <label className="text-[14px] font-semibold leading-[130%]">
             {filter.title}
           </label>
-          <button
-            type="button"
-            onClick={() => {
-              setIsOpenFilterItem(!isOpenFilterItem);
-            }}
-          >
+          <div className="flex justify-between items-center">
             <img
               src="/arrow.svg"
               alt="toggle"
@@ -123,12 +124,15 @@ const FilterItemField: React.FC<IFilterItemFieldProps> = ({ filter }) => {
                 isOpenFilterItem ? 'rotate-0' : 'rotate-180'
               }`}
             />
-          </button>
-        </div>
+          </div>
+        </button>
         {isOpenFilterItem && (
           <div className="my-4 overflow-y-auto max-h-44 flex flex-col gap-3">
             {filter.items.map((item, index) => (
-              <div key={index} className="flex items-center gap-3">
+              <div
+                key={index}
+                className="flex items-center gap-3 cursor-pointer"
+              >
                 <input
                   onChange={(e) =>
                     handleChange(
@@ -148,7 +152,7 @@ const FilterItemField: React.FC<IFilterItemFieldProps> = ({ filter }) => {
                   id={`filter-item-${filter.id}-${index}`}
                 />
                 <label
-                  className="ml-[2px] mr-[8px] text-gray-400"
+                  className="ml-[2px] mr-[8px] text-gray-400 cursor-pointer"
                   htmlFor={`filter-item-${filter.id}-${index}`}
                 >
                   {filter.id === 'quantityPerPackage'
