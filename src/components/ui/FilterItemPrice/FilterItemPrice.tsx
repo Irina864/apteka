@@ -131,22 +131,24 @@ const FilterItemPrice: React.FC<IFilterItemPriceProps> = ({ filter }) => {
         <div className="my-4 overflow-y-auto max-h-44 flex flex-col gap-3">
           <div className="flex items-center justify-between gap-3 ">
             <input
-              className="w-full rounded-lg bg-indigo-100 focus:border-blue-600 outline-blue-600 p-2"
+              className="w-full rounded-lg bg-indigo-100 outline-none py-2 px-5"
               type="number"
               name="price_min_input"
               value={price.price_min_input}
               onChange={handleInputChange}
               id={`filter-item-price_min_input`}
               placeholder={`от ${price.price_min}`}
+              readOnly
             />
             <input
-              className="w-full rounded-lg bg-indigo-100 focus:border-blue-600 outline-blue-600 p-2"
+              className="w-full rounded-lg bg-indigo-100 outline-none py-2 px-5"
               type="number"
               name="price_max_input"
               value={price.price_max_input}
               onChange={handleInputChange}
               id={`filter-item-price_max_input`}
               placeholder={`до ${price.price_max}`}
+              readOnly
             />
           </div>
           <PriceRangeSlider
