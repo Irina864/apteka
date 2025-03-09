@@ -21,10 +21,10 @@ const FilterItemPrice: React.FC<IFilterItemPriceProps> = ({ filter }) => {
     price_max: Number(filter.items[filter.items.length - 1]),
   });
 
-  const [minPriceInput, setMinPriceInput] = useState<number>(
+  const [minPriceInput, setMinPriceInput] = useState<string | number>(
     priceRange.price_min
   );
-  const [maxPriceInput, setMaxPriceInput] = useState<number>(
+  const [maxPriceInput, setMaxPriceInput] = useState<string | number>(
     priceRange.price_max
   );
 
@@ -43,33 +43,31 @@ const FilterItemPrice: React.FC<IFilterItemPriceProps> = ({ filter }) => {
   }, [filterList]);
 
   const handleMinPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value);
-    if (isNaN(value)) {
-      setMinPriceInput(priceRange.price_min);
+    const value = e.target.value;
+
+    if (value === '') {
+      setMinPriceInput('');
       return;
     }
 
-    const validatedValue = Math.max(
-      priceRange.price_min,
-      Math.min(value, maxPriceInput - 1)
-    );
-    setMinPriceInput(validatedValue);
-    updateMinPriceFilter(validatedValue);
+    const numValue = parseInt(value);
+    if (isNaN(numValue)) return;
+
+    setMinPriceInput(numValue);
   };
 
   const handleMaxPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value);
-    if (isNaN(value)) {
-      setMaxPriceInput(priceRange.price_max);
+    const value = e.target.value;
+
+    if (value === '') {
+      setMaxPriceInput('');
       return;
     }
 
-    const validatedValue = Math.min(
-      priceRange.price_max,
-      Math.max(value, minPriceInput + 1)
-    );
-    setMaxPriceInput(validatedValue);
-    updateMaxPriceFilter(validatedValue);
+    const numValue = parseInt(value);
+    if (isNaN(numValue)) return;
+
+    setMaxPriceInput(numValue);
   };
 
   const updateMinPriceFilter = (value: number) => {
@@ -104,6 +102,40 @@ const FilterItemPrice: React.FC<IFilterItemPriceProps> = ({ filter }) => {
     }
   };
 
+  const handleMinPriceBlur = () => {
+    let validatedValue: number;
+
+    if (typeof minPriceInput === 'string' && minPriceInput === '') {
+      validatedValue = priceRange.price_min;
+    } else {
+      const numValue = Number(minPriceInput);
+      validatedValue = Math.max(
+        priceRange.price_min,
+        Math.min(numValue, Number(maxPriceInput) - 1)
+      );
+    }
+
+    setMinPriceInput(validatedValue);
+    updateMinPriceFilter(validatedValue);
+  };
+
+  const handleMaxPriceBlur = () => {
+    let validatedValue: number;
+
+    if (typeof maxPriceInput === 'string' && maxPriceInput === '') {
+      validatedValue = priceRange.price_max;
+    } else {
+      const numValue = Number(maxPriceInput);
+      validatedValue = Math.min(
+        priceRange.price_max,
+        Math.max(numValue, Number(minPriceInput) + 1)
+      );
+    }
+
+    setMaxPriceInput(validatedValue);
+    updateMaxPriceFilter(validatedValue);
+  };
+
   const handleSliderMinChange = (newMinValue: number) => {
     setMinPriceInput(newMinValue);
     updateMinPriceFilter(newMinValue);
@@ -113,7 +145,6 @@ const FilterItemPrice: React.FC<IFilterItemPriceProps> = ({ filter }) => {
     setMaxPriceInput(newMaxValue);
     updateMaxPriceFilter(newMaxValue);
   };
-
   return (
     <div className="h-fit">
       <button
@@ -138,13 +169,14 @@ const FilterItemPrice: React.FC<IFilterItemPriceProps> = ({ filter }) => {
       </button>
       {isOpenFilterItem && (
         <div className="my-4 overflow-y-auto max-h-44 flex flex-col gap-3">
-          <div className="flex items-center justify-between gap-3 ">
+          <div className="flex items-center justify-between gap-3">
             <input
               className="w-full rounded-lg bg-indigo-100 outline-none py-2 px-5"
               type="number"
               name="price_min_input"
               value={minPriceInput}
               onChange={handleMinPriceChange}
+              onBlur={handleMinPriceBlur}
               min={priceRange.price_min}
               max={priceRange.price_max}
               id={`filter-item-price_min_input`}
@@ -156,6 +188,7 @@ const FilterItemPrice: React.FC<IFilterItemPriceProps> = ({ filter }) => {
               name="price_max_input"
               value={maxPriceInput}
               onChange={handleMaxPriceChange}
+              onBlur={handleMaxPriceBlur}
               min={priceRange.price_min}
               max={priceRange.price_max}
               id={`filter-item-price_max_input`}
@@ -165,8 +198,8 @@ const FilterItemPrice: React.FC<IFilterItemPriceProps> = ({ filter }) => {
           <PriceRangeSlider
             minPrice={priceRange.price_min}
             maxPrice={priceRange.price_max}
-            minValue={minPriceInput}
-            maxValue={maxPriceInput}
+            minValue={Number(minPriceInput)}
+            maxValue={Number(maxPriceInput)}
             onMinChange={handleSliderMinChange}
             onMaxChange={handleSliderMaxChange}
           />
